@@ -43,6 +43,7 @@ class EditorInputConnection extends BaseInputConnection {
     protected int mComposingStart = -1;
     protected int mComposingEnd = -1;
     private boolean mInvalid;
+    private boolean isShiftDown;
 
     /**
      * Create a connection for the given editor
@@ -207,6 +208,111 @@ class EditorInputConnection extends BaseInputConnection {
         }
         commitTextInternal(text, true);
         return true;
+    }
+
+    @Override
+    public boolean sendKeyEvent(KeyEvent event) {
+        Log.i(LOG_TAG, "sendKeyEvent: "+event.getKeyCode());
+        if(event.getAction()==KeyEvent.ACTION_DOWN){
+            switch (event.getKeyCode()){
+                case KeyEvent.KEYCODE_DEL:
+                case KeyEvent.KEYCODE_FORWARD_DEL:
+                    return true;
+                case KeyEvent.KEYCODE_ENTER:
+                case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                    commitText("\n", 0);
+                    return true;
+                case KeyEvent.KEYCODE_SHIFT_LEFT:
+                    isShiftDown = true;
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_DOWN:
+                    if(isShiftDown || event.isShiftPressed()){
+                        if(mEditor.isCurSingle()){
+                            mEditor.isRightCur = true;
+                        }
+                        if(mEditor.isRightCur){
+                            mEditor.rightCurDown();
+                        }
+                        else{
+                            mEditor.leftCurDown();
+                        }
+                    }
+                    else{
+                        mEditor.moveSelectionDown();
+                    }
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_UP:
+                    if(isShiftDown || event.isShiftPressed()){
+                        if(mEditor.isCurSingle()){
+                            mEditor.isRightCur = false;
+                        }
+                        if(mEditor.isRightCur){
+                            mEditor.rightCurUp();
+                        }
+                        else
+                            mEditor.leftCurUp();
+                    }
+                    else{
+                        mEditor.moveSelectionUp();
+                    }
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                    if(isShiftDown || event.isShiftPressed()){
+                        if(mEditor.isCurSingle()){
+                            mEditor.isRightCur = false;
+                        }
+                        if(mEditor.isRightCur){
+                            mEditor.rightCurLeft();
+                        }
+                        else
+                            mEditor.leftCurLeft();
+                    }
+                    else{
+                        mEditor.moveSelectionLeft();
+                    }
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    if(isShiftDown || event.isShiftPressed()){
+                        if(mEditor.isCurSingle()){
+                            mEditor.isRightCur = true;
+                        }
+                        if(mEditor.isRightCur){
+                            mEditor.rightCurRight();
+                        }
+                        else{
+                            mEditor.leftCurRight();
+                        }
+                    }
+                    else{
+                        mEditor.moveSelectionRight();
+                    }
+                    return true;
+            }
+//mEditor.onKeyDown(event.getKeyCode(), event);
+        }
+        else if(event.getAction()==KeyEvent.ACTION_UP){
+            switch (event.getKeyCode()){
+                case KeyEvent.KEYCODE_DEL:
+                case KeyEvent.KEYCODE_FORWARD_DEL:
+                    deleteSurroundingText(0, 0);
+                    return true;
+                case KeyEvent.KEYCODE_SHIFT_LEFT:
+                    isShiftDown = false;
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_DOWN:
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_UP:
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    return true;
+            }
+//            mEditor.onKeyUp(event.getKeyCode(),event);
+
+        }
+        return super.sendKeyEvent(event);
     }
 
     protected void commitTextInternal(CharSequence text, boolean applyAutoIndent) {

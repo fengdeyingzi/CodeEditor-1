@@ -234,6 +234,7 @@ public class CodeEditor extends View implements ContentListener, TextAnalyzer.Ca
     private CursorBlink mCursorBlink;
     private SymbolPairMatch mOverrideSymbolPairs;
     private LongArrayList mPostDrawLineNumbers = new LongArrayList();
+    boolean isRightCur;
 
     public CodeEditor(Context context) {
         this(context, null);
@@ -2217,7 +2218,7 @@ public class CodeEditor extends View implements ContentListener, TextAnalyzer.Ca
             builder.reset();
             mMatrix.set(getMatrix());
             int[] b = new int[2];
-            getLocationOnScreen(b);
+            getLocationInWindow(b);
             mMatrix.postTranslate(b[0], b[1]);
             builder.setMatrix(mMatrix);
             builder.setSelectionRange(mCursor.getLeft(), mCursor.getRight());
@@ -3288,7 +3289,15 @@ public class CodeEditor extends View implements ContentListener, TextAnalyzer.Ca
             return;
         }
         if (start > end) {
-            throw new IllegalArgumentException("start > end:start = " + start + " end = " + end + " lineLeft = " + lineLeft + " columnLeft = " + columnLeft + " lineRight = " + lineRight + " columnRight = " + columnRight);
+            //交换光标
+            int temp_line = lineLeft;
+            int temp_column = columnLeft;
+            lineLeft = lineRight;
+            lineRight = temp_line;
+            columnLeft = columnRight;
+            columnRight = temp_column;
+            isRightCur = !isRightCur;
+//                throw new IllegalArgumentException("start > end:start = " + start + " end = " + end + " lineLeft = " + lineLeft + " columnLeft = " + columnLeft + " lineRight = " + lineRight + " columnRight = " + columnRight);
         }
         boolean lastState = mCursor.isSelected();
         if (columnLeft > 0) {
@@ -3691,9 +3700,123 @@ public class CodeEditor extends View implements ContentListener, TextAnalyzer.Ca
         return (res3 || res2 || res);
     }
 
+    void leftCurLeft(){
+        Cursor cursor = getCursor();
+        int leftLine = cursor.getLeftLine();
+        int leftColumn = cursor.getLeftColumn();
+        if(leftColumn!=0){
+            leftColumn--;
+        }
+        else{
+
+            if(leftLine>0)leftLine--;
+            leftColumn = getText().getColumnCount(leftLine);
+        }
+        setSelectionRegion(leftLine, leftColumn, cursor.getRightLine(), cursor.getRightColumn());
+    }
+
+    void leftCurRight(){
+        Cursor cursor = getCursor();
+        int leftLine = cursor.getLeftLine();
+        int leftColumn = cursor.getLeftColumn();
+        leftColumn++;
+        int max_count = getText().getColumnCount(leftLine);
+        if(leftColumn>max_count){
+            leftColumn = 0;
+            if(leftLine <getText().getLineCount()-1)
+                leftLine++;
+        }
+        setSelectionRegion(leftLine, leftColumn, cursor.getRightLine(), cursor.getRightColumn());
+    }
+
+    void rightCurLeft(){
+        Cursor cursor = getCursor();
+        int leftLine = cursor.getRightLine();
+        int leftColumn = cursor.getRightColumn();
+        if(leftColumn!=0){
+            leftColumn--;
+        }
+        else{
+
+            if(leftLine>0)leftLine--;
+            leftColumn = getText().getColumnCount(leftLine);
+        }
+        setSelectionRegion( cursor.getLeftLine(), cursor.getLeftColumn(),leftLine, leftColumn);
+    }
+
+    void rightCurRight(){
+        Cursor cursor = getCursor();
+        int rightLine = cursor.getRightLine();
+        int rightColumn = cursor.getRightColumn();
+        rightColumn++;
+        int max_count = getText().getColumnCount(rightLine);
+        if(rightColumn>max_count){
+            rightColumn = 0;
+            if(rightLine<getText().getLineCount()-1)
+                rightLine++;
+        }
+        setSelectionRegion(cursor.getLeftLine(), cursor.getLeftColumn(), rightLine, rightColumn);
+    }
+
+    void leftCurUp(){
+        Cursor cursor = getCursor();
+        int leftLine = cursor.getLeftLine();
+        int leftColumn = cursor.getLeftColumn();
+        if(leftLine>0){
+            leftLine--;
+            int max_count = getText().getColumnCount(leftLine);
+            if(max_count<leftColumn)leftColumn = max_count;
+        }
+        setSelectionRegion(leftLine, leftColumn, cursor.getRightLine(), cursor.getRightColumn());
+    }
+    //xldebug
+    void leftCurDown(){
+        Cursor cursor = getCursor();
+        int leftLine = cursor.getLeftLine();
+        int leftColumn = cursor.getLeftColumn();
+        if(leftLine<getLineCount()-1){
+            leftLine++;
+            int max_count = getText().getColumnCount(leftLine);
+            if(leftColumn>max_count)leftColumn = max_count;
+        }
+        setSelectionRegion( leftLine, leftColumn,cursor.getRightLine(), cursor.getRightColumn());
+    }
+    //xldebug
+    void rightCurUp(){
+        Cursor cursor = getCursor();
+        int rightLine = cursor.getRightLine();
+        int rightColumn = cursor.getRightColumn();
+        if(rightLine>0){
+            rightLine--;
+            int max_count = getText().getColumnCount(rightLine);
+            if(max_count<rightColumn)rightColumn = max_count;
+        }
+        setSelectionRegion( cursor.getLeftLine(), cursor.getLeftColumn(), rightLine, rightColumn);
+    }
+
+    void rightCurDown(){
+        Cursor cursor = getCursor();
+        int rightLine = cursor.getRightLine();
+        int rightColumn = cursor.getRightColumn();
+        if(rightLine<getLineCount()-1){
+            rightLine++;
+            int max_count = getText().getColumnCount(rightLine);
+            if(rightColumn>max_count)rightColumn = max_count;
+        }
+        setSelectionRegion(cursor.getLeftLine(), cursor.getLeftColumn(), rightLine, rightColumn);
+    }
+
+    boolean isCurSingle(){
+        Cursor cursor = getCursor();
+        if((cursor.getLeftLine() == cursor.getRightLine()) && (cursor.getLeftColumn() == cursor.getRightColumn())){
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        //Log.d(LOG_TAG, KeyEvent.keyCodeToString(keyCode));
+        Log.d(LOG_TAG, KeyEvent.keyCodeToString(keyCode));
         switch (keyCode) {
             case KeyEvent.KEYCODE_DEL:
                 if (isEditable()) {
@@ -3708,7 +3831,9 @@ public class CodeEditor extends View implements ContentListener, TextAnalyzer.Ca
                 }
                 return true;
             }
-            case KeyEvent.KEYCODE_ENTER: {
+            case KeyEvent.KEYCODE_ENTER:
+            case KeyEvent.KEYCODE_NUMPAD_ENTER:
+            case KeyEvent.KEYCODE_DPAD_CENTER:{
                 if (isEditable()) {
                     if (mCompletionWindow.isShowing()) {
                         mCompletionWindow.select();
@@ -3756,16 +3881,64 @@ public class CodeEditor extends View implements ContentListener, TextAnalyzer.Ca
                 return true;
             }
             case KeyEvent.KEYCODE_DPAD_DOWN:
-                moveSelectionDown();
+                if(event.isShiftPressed()){
+                    if(isCurSingle()){
+                        isRightCur = true;
+                    }
+                    if(isRightCur){
+                        rightCurDown();
+                    }
+                    else{
+                        leftCurDown();
+                    }
+
+                }
+                else
+                    moveSelectionDown();
                 return true;
             case KeyEvent.KEYCODE_DPAD_UP:
-                moveSelectionUp();
+                if(event.isShiftPressed()){ //xldebug
+                    if(isCurSingle()){
+                        isRightCur = false;
+                    }
+                    if(isRightCur){
+                        rightCurUp();
+                    }
+                    else
+                        leftCurUp();
+                }
+                else
+                    moveSelectionUp();
                 return true;
             case KeyEvent.KEYCODE_DPAD_LEFT:
-                moveSelectionLeft();
+                if(event.isShiftPressed()){
+                    if(isCurSingle()){
+                        isRightCur = false;
+                    }
+                    if(isRightCur){
+                        rightCurLeft();
+                    }
+                    else
+                        leftCurLeft();
+                }
+                else
+                    moveSelectionLeft();
                 return true;
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                moveSelectionRight();
+                if(event.isShiftPressed()){
+                    if(isCurSingle()){
+                        isRightCur = true;
+                    }
+                    if(isRightCur){
+                        rightCurRight();
+                    }
+                    else{
+                        leftCurRight();
+                    }
+
+                }
+                else
+                    moveSelectionRight();
                 return true;
             case KeyEvent.KEYCODE_MOVE_END:
                 moveSelectionEnd();
@@ -3857,6 +4030,29 @@ public class CodeEditor extends View implements ContentListener, TextAnalyzer.Ca
                 }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        Log.i(LOG_TAG, "onKeyUp: "+keyCode);
+        switch (keyCode){
+            case KeyEvent.KEYCODE_DEL:
+            case KeyEvent.KEYCODE_FORWARD_DEL:
+                if (mConnection != null) {
+                    mConnection.deleteSurroundingText(0, 0);
+                    notifyExternalCursorChange();
+                }
+                return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
+        if(!gainFocus){
+            postHideCompletionWindow();
+        }
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
     }
 
     @Override
