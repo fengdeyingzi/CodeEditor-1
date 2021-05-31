@@ -295,7 +295,7 @@ class EditorInputConnection extends BaseInputConnection {
             switch (event.getKeyCode()){
                 case KeyEvent.KEYCODE_DEL:
                 case KeyEvent.KEYCODE_FORWARD_DEL:
-                    deleteSurroundingText(0, 0);
+                    deleteSurroundingText(1, 0);
                     return true;
                 case KeyEvent.KEYCODE_SHIFT_LEFT:
                     isShiftDown = false;
