@@ -20,14 +20,14 @@
     android:id="@+id/text_compose_panel"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="#ffffffff"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
 
-    <com.google.android.material.button.MaterialButton
+    <ImageButton
         android:id="@+id/tcpw_material_button_select_all"
         style="@style/TextButton.IconOnly"
         android:layout_width="wrap_content"
@@ -35,13 +35,10 @@
         android:text="@string/selectAll"
         android:textColor="@color/textActionNameColor"
         android:textSize="10sp"
-        app:icon="@drawable/round_select_all_20"
-        app:iconGravity="textTop"
-        app:iconPadding="8dp"
-        app:iconTint="@color/textActionNameColor"
-        app:shapeAppearanceOverlay="@style/ButtonBar.IconOnly.Left" />
+        android:src="@drawable/round_select_all_20"
+        />
 
-    <com.google.android.material.button.MaterialButton
+    <ImageButton
         android:id="@+id/tcpw_material_button_copy"
         style="@style/TextButton.IconOnly"
         android:layout_width="wrap_content"
@@ -49,14 +46,11 @@
         android:text="@string/copy"
         android:textColor="@color/textActionNameColor"
         android:textSize="10sp"
-        app:icon="@drawable/round_content_copy_20"
-        app:iconGravity="textTop"
-        app:iconPadding="8dp"
-        app:iconTint="@color/textActionNameColor"
-        app:shapeAppearanceOverlay="@style/ButtonBar.IconOnly.Middle" />
+        android:src="@drawable/round_content_copy_20"
+        />
 
 
-    <com.google.android.material.button.MaterialButton
+    <ImageButton
         android:id="@+id/tcpw_material_button_paste"
         style="@style/TextButton.IconOnly"
         android:layout_width="wrap_content"
@@ -64,13 +58,10 @@
         android:text="@string/paste"
         android:textColor="@color/textActionNameColor"
         android:textSize="10sp"
-        app:icon="@drawable/round_content_paste_20"
-        app:iconGravity="textTop"
-        app:iconPadding="8dp"
-        app:iconTint="@color/textActionNameColor"
-        app:shapeAppearanceOverlay="@style/ButtonBar.IconOnly.Middle" />
+        android:src="@drawable/round_content_paste_20"
+        />
 
-    <com.google.android.material.button.MaterialButton
+    <ImageButton
         android:id="@+id/tcpw_material_button_cut"
         style="@style/TextButton.IconOnly"
         android:layout_width="wrap_content"
@@ -78,11 +69,8 @@
         android:text="@string/cut"
         android:textColor="@color/textActionNameColor"
         android:textSize="10sp"
-        app:icon="@drawable/round_content_cut_20"
-        app:iconGravity="textTop"
-        app:iconPadding="8dp"
-        app:iconTint="@color/textActionNameColor"
-        app:shapeAppearanceOverlay="@style/ButtonBar.IconOnly.Middle" />
+        android:src="@drawable/round_content_cut_20"
+        />
 
 
     <View
@@ -90,7 +78,7 @@
         android:layout_height="36dp"
         android:layout_gravity="center" />
 
-    <com.google.android.material.button.MaterialButton
+    <ImageButton
         android:id="@+id/tcpw_material_button_save_to_project"
         style="@style/TextButton.IconOnly"
         android:layout_width="wrap_content"
@@ -98,11 +86,8 @@
         android:text="@string/more"
         android:textColor="@color/textActionNameColor"
         android:textSize="10sp"
-        app:icon="@drawable/ic_more_vert_black_20dp"
-        app:iconGravity="textTop"
-        app:iconPadding="8dp"
-        app:iconTint="@color/textActionNameColor"
-        app:shapeAppearanceOverlay="@style/ButtonBar.IconOnly.Right" />
+        android:src="@drawable/ic_more_vert_black_20dp"
+        />
 
 
 </LinearLayout>

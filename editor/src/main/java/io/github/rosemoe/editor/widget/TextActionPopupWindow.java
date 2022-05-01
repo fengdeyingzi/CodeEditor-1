@@ -24,16 +24,17 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.google.android.material.button.MaterialButton;
+
 
 import io.github.rosemoe.editor.R;
 
 public class TextActionPopupWindow extends TextComposeBasePopup implements View.OnClickListener, CodeEditor.EditorTextActionPresenter {
     private final CodeEditor mEditor;
-    private final MaterialButton mPasteBtn;
-    private final MaterialButton mSelectAll;
+    private final Button mPasteBtn;
+    private final Button mSelectAll;
     private final LinearLayout mContainer;
 
     private float mDpUnit = 0f;
@@ -55,8 +56,8 @@ public class TextActionPopupWindow extends TextComposeBasePopup implements View.
         View root = LayoutInflater.from(editor.getContext()).inflate(R.layout.text_compose_popup_window, null);
         mSelectAll = root.findViewById(R.id.tcpw_material_button_select_all);
         mContainer = root.findViewById(R.id.text_compose_panel);
-        MaterialButton cut = root.findViewById(R.id.tcpw_material_button_cut);
-        MaterialButton copy = root.findViewById(R.id.tcpw_material_button_copy);
+        Button cut = root.findViewById(R.id.tcpw_material_button_cut);
+        Button copy = root.findViewById(R.id.tcpw_material_button_copy);
         mPasteBtn = root.findViewById(R.id.tcpw_material_button_paste);
         mSelectAll.setOnClickListener(this);
         cut.setOnClickListener(this);

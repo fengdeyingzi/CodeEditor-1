@@ -27,9 +27,9 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="TextButton.IconOnly" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="iconPadding">0dp</item>
-        <item name="cornerFamily">cut</item>
+    <style name="TextButton.IconOnly" parent="android:Widget.Button">
+<!--        <item name="iconPadding">0dp</item>-->
+<!--        <item name="cornerFamily">cut</item>-->
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:paddingLeft">12dp</item>
@@ -40,8 +40,8 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
-    <style name="OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="iconPadding">0dp</item>
+    <style name="OutlinedButton.IconOnly" parent="android:Widget.Button">
+<!--        <item name="iconPadding">0dp</item>-->
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:paddingLeft">12dp</item>
@@ -51,30 +51,30 @@
     </style>
 
     <style name="RoundOutlinedButton.IconOnly" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
+<!--        <item name="cornerFamily">rounded</item>-->
+<!--        <item name="cornerSize">50%</item>-->
         <item name="android:maxWidth">48dp</item>
         <item name="android:maxHeight">48dp</item>
     </style>
 
     <style name="ButtonBar.IconOnly.Left" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopLeft">8dp</item>
-        <item name="cornerSizeTopRight">0dp</item>
-        <item name="cornerSizeBottomLeft">8dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
+<!--        <item name="cornerFamily">rounded</item>-->
+<!--        <item name="cornerSizeTopLeft">8dp</item>-->
+<!--        <item name="cornerSizeTopRight">0dp</item>-->
+<!--        <item name="cornerSizeBottomLeft">8dp</item>-->
+<!--        <item name="cornerSizeBottomRight">0dp</item>-->
     </style>
 
     <style name="ButtonBar.IconOnly.Middle" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">0dp</item>
+<!--        <item name="cornerFamily">rounded</item>-->
+<!--        <item name="cornerSize">0dp</item>-->
     </style>
 
     <style name="ButtonBar.IconOnly.Right" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopLeft">0dp</item>
-        <item name="cornerSizeTopRight">8dp</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
-        <item name="cornerSizeBottomRight">8dp</item>
+<!--        <item name="cornerFamily">rounded</item>-->
+<!--        <item name="cornerSizeTopLeft">0dp</item>-->
+<!--        <item name="cornerSizeTopRight">8dp</item>-->
+<!--        <item name="cornerSizeBottomLeft">0dp</item>-->
+<!--        <item name="cornerSizeBottomRight">8dp</item>-->
     </style>
 </resources>
